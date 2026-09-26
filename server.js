@@ -17,9 +17,9 @@ const server = new Server(
 );
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
-server.setRequestHandler(CallToolRequestSchema, async (req) => {
+server.setRequestHandler(CallToolRequestSchema, async (req, extra) => {
   try {
-    return await runTool(req.params.name, req.params.arguments || {});
+    return await runTool(req.params.name, req.params.arguments || {}, { signal: extra.signal });
   } catch (e) {
     return fail(e.message);
   }
@@ -29,4 +29,4 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.error('mcp-uk-tools running on stdio');
-})();
+})().catch((error) => { console.error(error.message); process.exitCode = 1; });

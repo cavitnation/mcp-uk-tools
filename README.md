@@ -20,7 +20,7 @@ It's a clean, dependency-light reference for how I build MCP tool servers: a typ
 ## Run it
 
 ```bash
-npm install
+npm ci
 node server.js      # speaks MCP over stdio
 ```
 
@@ -52,11 +52,28 @@ That's the whole contract. Swap the data sources for your own APIs and you have 
 ## Tests
 
 ```bash
-npm test   # node --test — schema + input-validation unit tests
+npm test   # node --test — unit, upstream-response, timeout and stdio integration tests
 ```
 
-Every push and PR runs the suite on Node 18, 20 and 22 via GitHub Actions.
+Every push and PR runs the suite on Node 22 and 24 via GitHub Actions. Node 22+ is required; use a supported LTS release.
 
 ## License
 
 MIT © Azeem Javed
+
+## Reliability contract
+
+Arguments are validated by the server before network access. Nearest-postcode coordinates must be finite numbers within geographic bounds; `limit` is an integer from 1 to 100. Unknown holiday divisions return an explicit error. Upstream failures and malformed responses do not become successful empty results.
+
+Bank holidays include **today in Europe/London**, are sorted by date, and return at most eight events. Requests have a 10-second deadline and propagate MCP cancellation. The postcode lookup's historical `town` field represents an administrative ward/parish, not a verified postal town.
+
+The lockfile and `npm ci` make dependency resolution repeatable. Tests mock upstream data, cover London date boundaries and exercise a real stdio client/server exchange without contacting public APIs. Dependabot checks npm and Actions dependencies weekly.
+
+```sh
+npm ci
+npm run check
+npm test
+npm audit --omit=dev
+```
+
+No upstream availability guarantee is implied. Sources: [Postcodes.io geolocation contract](https://postcodes.io/docs/api/postcode-lookup/) and [GOV.UK bank-holiday data](https://www.gov.uk/bank-holidays.json).

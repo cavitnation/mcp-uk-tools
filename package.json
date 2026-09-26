@@ -3,10 +3,28 @@
   "version": "1.0.0",
   "description": "A Model Context Protocol (MCP) server exposing keyless UK public-data tools to any MCP client (Claude Code, Claude Desktop). No API keys.",
   "type": "commonjs",
-  "bin": { "mcp-uk-tools": "server.js" },
-  "scripts": { "start": "node server.js", "test": "node --test" },
-  "keywords": ["mcp", "model-context-protocol", "ai", "llm", "agentic", "claude", "tools"],
-  "engines": { "node": ">=18" },
+  "bin": {
+    "mcp-uk-tools": "server.js"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "check": "node --check server.js && node --check tools.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "llm",
+    "agentic",
+    "claude",
+    "tools"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "license": "MIT",
-  "dependencies": { "@modelcontextprotocol/sdk": "^1.0.0" }
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
 }
